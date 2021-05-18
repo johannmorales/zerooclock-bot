@@ -29,8 +29,10 @@ exports.play = (req, res) => {
           .minutes(parseInt(process.env.TARGET_MINUTES))
           .hours(parseInt(process.env.TARGET_HOURS))
           .subtract(secondsToAdd, "seconds")
-          .add(1, "seconds");
-        const diff = target.diff(now) - 500;
+          .add(1, "seconds")
+          .subtract(500, "milliseconds");
+      
+        const diff = target.diff(now);
 
         console.log("now", now);
         console.log("target", target);
