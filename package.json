@@ -13,7 +13,6 @@
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.3.0",
     "fluent-ffmpeg": "^2.1.2",
-    "moment-timezone": "^0.5.33",
-    "ytdl-core": "^4.7.0"
+    "moment-timezone": "^0.5.33"
   }
 }

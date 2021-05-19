@@ -1,56 +1,64 @@
 require("dotenv").config();
 
-const ytdl = require("ytdl-core");
 const Discord = require("discord.js");
 const moment = require("moment-timezone");
 
 const URL = "https://www.youtube.com/watch?v=Nr3ot5gSvkM";
 const VOICE_CHANNEL_NAME = "00:00";
+const ZERO_O_CLOCK_AT = "83";
 const secondsToAdd = parseInt(process.env.SECONDS_TO_SYNC) + parseInt(process.env.SECONDS_DELAY_GCP_DISCORD);
+
+function log(data) {
+  console.log(`[${moment.tz("America/Lima").toISOString()}] - ${data}`);
+}
 
 exports.play = (req, res) => {
   const client = new Discord.Client();
   client.login(process.env.DISCORD_KEY);
 
   client.on("ready", () => {
-    console.log("Client is ready");
-    const channels = client.channels.cache
+    log("client ready");
+    const channel = client.channels.cache
       .filter((channel) => channel.type === "voice")
-      .filter((channel) => channel.name === VOICE_CHANNEL_NAME);
-    if (!channels || channels.length === 0 || channels.length > 1) {
-      console.log("Could not find 00:00 channel =(");
-    } else {
-      console.log("Found channel", VOICE_CHANNEL_NAME);
-      channels.forEach((channel) => {
-        const now = moment().tz("America/Lima");
-        const target = moment()
-          .tz("America/Lima")
-          .seconds(parseInt(process.env.TARGET_SECONDS))
-          .minutes(parseInt(process.env.TARGET_MINUTES))
-          .hours(parseInt(process.env.TARGET_HOURS))
-          .subtract(secondsToAdd, "seconds")
-          .add(1, "seconds")
-          .subtract(500, "milliseconds");
+      .find((channel) => channel.name === VOICE_CHANNEL_NAME);
+
+    log(`found voice channel ${VOICE_CHANNEL_NAME} (id: ${channel.id})`);
+   
+
+    channel.join().then((connection) => {
+      log("joined voice channel");
       
-        const diff = target.diff(now);
 
-        console.log("now", now);
-        console.log("target", target);
-        console.log("diff", diff);
+      const now = moment().tz("America/Lima");
+      const target = moment()
+        .tz("America/Lima")
+        // .add(1, "days")
+        .milliseconds(0)
+        .seconds(0)
+        .minutes(32)
+        .hours(16)
+        .subtract(ZERO_O_CLOCK_AT, "seconds")
+        .subtract(parseInt(process.env.CODE_DELAY), "milliseconds");
 
-        setTimeout(() => {
-          channel.join().then((connection) => {
-            console.log("Joined voice channel", VOICE_CHANNEL_NAME);
-            connection.play(ytdl(URL)).on("finish", () => {
-              console.log("Done playing leaving channel", VOICE_CHANNEL_NAME);
-              channel.leave();
-              console.log("done");
-              client.destroy();
-              res.status(200).send("played successfully");
-            });
+        // const wait = target.diff(now);
+        const wait = 0;
+        log(`waiting ${wait}ms`)
+        
+      // setTimeout(() => {
+        connection
+          .play('./resources/audio.mp3')
+          .on("start", () => {
+            log("started playing");
+          })
+          .on("finish", () => {
+            log("finished playing");
+            channel.leave();
+            log("left");
+            client.destroy();
+            res && res.status(200).send("played successfully");
           });
-        }, diff);
-      });
-    }
+      // }, wait);
+      log(`scheduled for ${target.toISOString()}`)
+    });
   });
 };
