@@ -3,10 +3,8 @@ require("dotenv").config();
 const Discord = require("discord.js");
 const moment = require("moment-timezone");
 
-const URL = "https://www.youtube.com/watch?v=Nr3ot5gSvkM";
 const VOICE_CHANNEL_NAME = "00:00";
 const ZERO_O_CLOCK_AT = "83";
-const secondsToAdd = parseInt(process.env.SECONDS_TO_SYNC) + parseInt(process.env.SECONDS_DELAY_GCP_DISCORD);
 
 function log(data) {
   console.log(`[${moment.tz("America/Lima").toISOString()}] - ${data}`);
@@ -24,11 +22,8 @@ exports.play = (req, res) => {
 
     log(`found voice channel ${VOICE_CHANNEL_NAME} (id: ${channel.id})`);
    
-
     channel.join().then((connection) => {
       log("joined voice channel");
-      
-
       const now = moment().tz("America/Lima");
       const target = moment()
         .tz("America/Lima")
