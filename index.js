@@ -30,16 +30,15 @@ exports.play = (req, res) => {
         // .add(1, "days")
         .milliseconds(0)
         .seconds(0)
-        .minutes(32)
-        .hours(16)
+        .minutes(40)
+        .hours(19)
         .subtract(ZERO_O_CLOCK_AT, "seconds")
-        .subtract(parseInt(process.env.CODE_DELAY), "milliseconds");
+        .subtract(parseInt(process.env.LATENCY_TO_DISCORD_MS), "milliseconds");
 
-        // const wait = target.diff(now);
-        const wait = 0;
+        const wait = target.diff(now);
         log(`waiting ${wait}ms`)
         
-      // setTimeout(() => {
+      setTimeout(() => {
         connection
           .play('./resources/audio.mp3')
           .on("start", () => {
@@ -52,7 +51,7 @@ exports.play = (req, res) => {
             client.destroy();
             res && res.status(200).send("played successfully");
           });
-      // }, wait);
+      }, wait);
       log(`scheduled for ${target.toISOString()}`)
     });
   });
