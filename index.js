@@ -30,8 +30,8 @@ exports.play = (req, res) => {
         // .add(1, "days")
         .milliseconds(0)
         .seconds(0)
-        .minutes(45)
-        .hours(20)
+        .minutes(5)
+        .hours(21)
         .subtract(ZERO_O_CLOCK_AT, "seconds")
         .subtract(parseInt(process.env.LATENCY_TO_DISCORD_MS), "milliseconds");
 
