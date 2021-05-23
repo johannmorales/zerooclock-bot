@@ -13,7 +13,6 @@ function log(data) {
 exports.play = (req, res) => {
   const client = new Discord.Client();
   client.login(process.env.DISCORD_KEY);
-
   client.on("ready", () => {
     log("client ready");
     const channel = client.channels.cache
