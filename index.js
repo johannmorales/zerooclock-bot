@@ -11,8 +11,8 @@ function log(data) {
 }
 
 exports.play = (req, res) => {
-  log(`params are ${JSON.stringify(req.params)}`);
-  const { daysToAdd, seconds, minutes, hours } = req.params;
+  log(`params are ${JSON.stringify(req.query)}`);
+  const { daysToAdd, seconds, minutes, hours } = req.query;
   const client = new Discord.Client();
   client.login(process.env.DISCORD_KEY);
   client.on("ready", () => {
