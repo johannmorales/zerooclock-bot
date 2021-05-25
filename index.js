@@ -4,13 +4,15 @@ const Discord = require("discord.js");
 const moment = require("moment-timezone");
 
 const VOICE_CHANNEL_NAME = "00:00";
-const ZERO_O_CLOCK_AT = 83;
+const ZERO_O_CLOCK_AT = 84;
 
 function log(data) {
   console.log(`[${moment.tz("America/Lima").toISOString()}] - ${data}`);
 }
 
 exports.play = (req, res) => {
+  log(`params are ${JSON.stringify(req.params)}`);
+  const { daysToAdd, seconds, minutes, hours } = req.params;
   const client = new Discord.Client();
   client.login(process.env.DISCORD_KEY);
   client.on("ready", () => {
@@ -26,11 +28,11 @@ exports.play = (req, res) => {
       const now = moment().tz("America/Lima");
       const target = moment()
         .tz("America/Lima")
-        .add(1, "days")
+        .add(Number.parseInt(daysToAdd), "days")
         .milliseconds(0)
-        .seconds(0)
-        .minutes(0)
-        .hours(0)
+        .seconds(Number.parseInt(seconds))
+        .minutes(Number.parseInt(minutes))
+        .hours(Number.parseInt(hours))
         .subtract(ZERO_O_CLOCK_AT, "seconds")
         .subtract(parseInt(process.env.LATENCY_TO_DISCORD_MS), "milliseconds");
 
