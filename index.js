@@ -4,7 +4,7 @@ const Discord = require("discord.js");
 const moment = require("moment-timezone");
 
 const VOICE_CHANNEL_NAME = "00:00";
-const ZERO_O_CLOCK_AT = "83";
+const ZERO_O_CLOCK_AT = 83;
 
 function log(data) {
   console.log(`[${moment.tz("America/Lima").toISOString()}] - ${data}`);
